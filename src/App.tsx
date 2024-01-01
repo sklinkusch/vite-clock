@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useDebugState } from 'use-named-state';
 import type { Country, ExtendedCountry, TimeZoneObject } from '../custom.d.ts';
 import './App.css';
+import Clock from './components/Clock/Clock.tsx';
 
 function getCurrentOffset(timeZone: string) {
   const format = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'longOffset' }) || {
     offsetString: '±00:00',
     offsetMinutes: 0,
   };
-  if (!format) return { offsetString: '±00:00', offsetMinutes: 0 };
   const offsetString = format
     .formatToParts()
     .find((p) => p.type === 'timeZoneName')
@@ -92,7 +92,6 @@ function App() {
             return false;
           })
         : timezoneArray;
-    console.log(filteredStates);
     setTimezones(filteredStates);
   };
   useEffect(() => {
@@ -117,10 +116,7 @@ function App() {
         {timezones &&
           timezones.length > 0 &&
           timezones.map((time, index) => (
-            <div key={index}>
-              <div>{time.city}</div>
-              <div>{time.flags.map((flag: any) => flag.title).join(', ')}</div>
-            </div>
+            <Clock key={index} flags={time.flags} city={time.city} zone={time.zone} cities={time.cities} />
           ))}
       </div>
     </div>
