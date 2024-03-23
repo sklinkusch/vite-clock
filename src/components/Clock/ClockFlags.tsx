@@ -1,4 +1,5 @@
 import Flag from './Flag';
+import styles from './ClockFlags.module.css';
 
 type Flag = {
   title: string | { title: string };
@@ -46,7 +47,7 @@ const ClockFlags = ({ flags }: ClockFlagsProps) => (
       flags.length > 0 &&
       flags.map((flag, index) => {
         const flagTitle = flag.subdiv.length > 0 ? getMultiTitle(flag.title, flag.subdiv) : flag.title;
-        return <Flag key={index} code={flag.code} title={flagTitle} />;
+        return <Flag key={index} code={flag.code} title={flagTitle} cn={styles.flag} />;
       })}
   </div>
 );
