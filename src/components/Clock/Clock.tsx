@@ -1,30 +1,10 @@
 import { useEffect } from 'react';
 import { useDebugState } from 'use-named-state';
-import type { City } from '../../../custom.d.ts';
+import type { ClockFlag, DateProps, TimeProps, ClockProps } from '../../types/custom';
 import ClockTitle from './ClockTitle.tsx';
 import ClockFlags from './ClockFlags.tsx';
-// const ClockCities = lazy(() => import("./ClockCities"))
-
-type Flag = {
-  title: string | { title: string };
-  subdiv: { title: string; extra: string }[];
-  code: string;
-};
-
-type DateProps = {
-  date: string;
-};
-
-type TimeProps = {
-  date: string;
-};
-
-type ClockProps = {
-  flags: Flag[];
-  city: string;
-  zone: string;
-  cities: City[];
-};
+import styles from '@/styles/Clock.module.css';
+import ClockCities from './ClockCities';
 
 export const ClockDate = ({ date }: DateProps) => <p>{date}</p>;
 
@@ -47,14 +27,14 @@ const Clock = ({ flags, city, zone, cities }: ClockProps) => {
     setFormattedDate(`${new Date().toLocaleDateString('en-GB', { timeZone: zone })}`);
     setFormattedTime(`${new Date().toLocaleTimeString('de', { timeZone: zone })}`);
   };
-  const sortedFlags = flags.sort((a, b) => {
+  const sortedFlags = flags.sort((a: ClockFlag, b: ClockFlag) => {
     const aTitle = typeof a.title === 'object' ? a.title.title : a.title;
     const bTitle = typeof b.title === 'object' ? b.title.title : b.title;
     return aTitle.localeCompare(bTitle, 'de', { sensitivity: 'base' });
   });
-  const reducedFlags = sortedFlags.reduce((acc: Flag[], curr) => {
+  const reducedFlags = sortedFlags.reduce((acc: ClockFlag[], curr) => {
     const arr = [...acc];
-    const flagIndexes = arr.map((flag: Flag) => flag.code);
+    const flagIndexes = arr.map((flag) => flag.code);
     if (flagIndexes.includes(curr.code)) {
       const index = flagIndexes.indexOf(curr.code);
       const element = arr[index];
@@ -76,13 +56,13 @@ const Clock = ({ flags, city, zone, cities }: ClockProps) => {
   }, []);
   const uniqueCities = [...new Set(cities)];
   return (
-    <div>
-      <div className="album-item">
+    <div className={styles.container}>
+      <div className={styles.card}>
         <ClockTitle city={city} />
         <ClockDate date={formattedDate} />
         <ClockTime date={formattedTime} />
         <ClockFlags flags={reducedFlags} />
-        {/* <ClockCities uniqueCities={uniqueCities} /> */}
+        <ClockCities uniqueCities={uniqueCities} />
       </div>
     </div>
   );

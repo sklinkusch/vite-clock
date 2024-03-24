@@ -33,6 +33,23 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts", ".tsx", ".css", ".json"],
+        "alias": {
+          "extensions": [".js", ".ts", ".tsx", ".css", ".json"],
+          "map": [
+            ["@", "./src"],
+            ["@/assets", "./src/assets"],
+            ["@/components", "./src/components"],
+            ["@/constants", "./src/constants"],
+            ["@/services", "./src/services"],
+            ["@/styles", "./src/styles"],
+            ["@/types", "./src/types"]
+          ]
+        }
+      }
     }
   },
   "ignorePatterns": ["vite.config.ts", "tsconfig.json", "tsconfig.node.json", "custom.d.ts"]

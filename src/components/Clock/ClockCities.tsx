@@ -1,11 +1,8 @@
 import Flag from './Flag';
 import { countries } from './data';
 // import { getPermLocale } from './getLocale';
-import type { City } from '../../../custom.d.ts';
-
-type ClockCityProps = {
-  uniqueCities: City[];
-};
+import type { City, CountryObject, ClockCityProps } from '../../types/custom';
+import styles from '@/styles/ClockCities.module.css';
 
 const getSunTime = (city: City) => {
   const { lon } = city;
@@ -22,15 +19,16 @@ const getSunTime = (city: City) => {
 };
 
 const ClockCities = ({ uniqueCities }: ClockCityProps) => {
-  const currentLanguage = window.navigator.language.substring(0, 2).toLowerCase();
+  let currentLanguage = window.navigator.language.substring(0, 2).toLowerCase();
+  if (['de', 'en', 'fr'].includes(currentLanguage)) currentLanguage = 'en';
   return (
     <>
       {uniqueCities && uniqueCities.length > 0 ? (
-        <details style={{ width: '95%', paddingLeft: '2.5%', paddingRight: '2.5%' }}>
+        <details className={styles.citylist}>
           <summary>Major Cities</summary>
-          <ul>
+          <ul className={styles.ul}>
             {uniqueCities
-              .sort((a, b) => {
+              .sort((a: City, b: City) => {
                 if (a.asciiname.toLowerCase() < b.asciiname.toLowerCase()) return -1;
                 if (b.asciiname.toLowerCase() < a.asciiname.toLowerCase()) return +1;
                 if (a.country.toLowerCase() < b.country.toLowerCase()) return -1;
@@ -39,31 +37,18 @@ const ClockCities = ({ uniqueCities }: ClockCityProps) => {
                 if (b.adminCode.toLowerCase() < a.adminCode.toLowerCase()) return +1;
                 return 0;
               })
-              .map((city, index) => {
-                const countryName =
-                  currentLanguage in countries[city.country] && countries[city.country][currentLanguage]
-                    ? countries[city.country][currentLanguage]
-                    : 'en' in countries[city.country] && countries[city.country].en
-                      ? countries[city.country].en
-                      : city.country in countries && countries[city.country]
-                        ? countries[city.country]
-                        : city.country;
+              .map((city: City, index: number) => {
+                const { country, asciiname } = city;
+                const countryObject: CountryObject =
+                  typeof country === 'string' && countries.hasOwnProperty(country) ? countries[country] : {};
+                const countryName: string = countryObject.hasOwnProperty(currentLanguage)
+                  ? countryObject[currentLanguage]
+                  : '';
+                if (!countryName.length) return;
                 return (
-                  <li
-                    key={`city-${index}`}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                    }}
-                  >
-                    <span style={{ flexBasis: '65%', textAlign: 'left' }}>{city.asciiname}</span>
-                    <Flag
-                      code={city.country}
-                      title={countryName}
-                      style={{ flexBasis: '35px', position: 'relative', bottom: '4px' }}
-                    />
+                  <li key={`city-${index}`} className={styles.cityrow}>
+                    <span className={styles.cityname}>{asciiname}</span>
+                    <Flag code={country} title={countryName} cn={styles.flag} />
                     <span>{getSunTime(city)}</span>
                   </li>
                 );

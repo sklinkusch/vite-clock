@@ -1,11 +1,6 @@
-type Props = {
-  code: string;
-  title: string | { title: string };
-  style?: any;
-  cn?: string;
-};
+import type { FlagProps } from '../../types/custom';
 
-const Flag = ({ code, title, cn, ...attributes }: Props) => {
+const Flag = ({ code, title, cn, ...attributes }: FlagProps) => {
   const Title = typeof title === 'string' ? title : title.title;
   switch (code) {
     case 'AC':

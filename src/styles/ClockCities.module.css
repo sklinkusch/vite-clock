@@ -1,0 +1,26 @@
+.citylist {
+  width: 95%;
+  padding-left: 2.5% !important;
+  padding-right: 2.5% !important;
+}
+
+.ul {
+  padding-left: 0;
+}
+
+.cityrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.cityname {
+  flex-basis: 65%;
+  text-align: left;
+}
+
+.flag {
+  flex-basis: 35px;
+}

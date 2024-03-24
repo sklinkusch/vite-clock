@@ -1,8 +1,6 @@
-type Props = {
-  city: string;
-};
+import type { ClockTitleProps } from '../../types/custom';
 
-const ClockTitle = ({ city }: Props) => {
+const ClockTitle = ({ city }: ClockTitleProps) => {
   const correctedCity = city.replace('-', '–');
   return (
     <h2>

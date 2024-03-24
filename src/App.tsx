@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { useDebugState } from 'use-named-state';
-import type { Country, ExtendedCountry, TimeZoneObject } from '../custom.d.ts';
-import './App.css';
-import Clock from './components/Clock/Clock.tsx';
+import type { Country, ExtendedCountry, TimeZoneObject } from './types/custom';
+import Clock from './components/Clock/Clock';
+import styles from '@/styles/App.module.css';
 
 function getCurrentOffset(timeZone: string) {
   const format = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'longOffset' }) || {
     offsetString: '±00:00',
     offsetMinutes: 0,
   };
-  const offsetString = format
-    .formatToParts()
-    .find((p) => p.type === 'timeZoneName')
-    .value.slice(3);
+  const partlyFormattedFormat = format.formatToParts();
+  if (!partlyFormattedFormat) return { offsetString: '±00:00', offsetMinutes: 0 };
+  const findFormatted = partlyFormattedFormat.find((p) => p.type === 'timeZoneName');
+  if (!findFormatted) return { offsetString: '±00:00', offsetMinutes: 0 };
+  const offsetString = findFormatted.value.slice(3);
 
   if (!offsetString) return { offsetString: '±00:00', offsetMinutes: 0 };
   if (offsetString === '') {
@@ -101,18 +102,19 @@ function App() {
   }, []);
 
   return (
-    <div className="app">
-      <div style={{ textAlign: 'center', marginBottom: '24px', marginTop: '24px' }}>
+    <div className={styles.app}>
+      <div className={styles.inputcontainer}>
         <input
           type="text"
           placeholder="Filter countries"
+          className={styles.input}
           onChange={(e) => {
             setFiltVal(e.target.value);
             prepareZones(allTz, e.target.value);
           }}
         />
       </div>
-      <div className="row album sk-album">
+      <div className={styles.grid}>
         {timezones &&
           timezones.length > 0 &&
           timezones.map((time, index) => (

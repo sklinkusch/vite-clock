@@ -1,15 +1,6 @@
 import Flag from './Flag';
-import styles from './ClockFlags.module.css';
-
-type Flag = {
-  title: string | { title: string };
-  subdiv: { title: string; extra: string }[];
-  code: string;
-};
-
-type ClockFlagsProps = {
-  flags: Flag[];
-};
+import styles from '@/styles/ClockFlags.module.css';
+import type { ClockFlagsProps } from '../../types/custom';
 
 function getMultiTitle(flagTitle: string | { title: string }, flagSubdiv: { title: string; extra: string }[]) {
   if (flagSubdiv.length === 1) {
